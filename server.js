@@ -10,13 +10,7 @@ app.get('/pokemons', async (req, res) => {
     res.json(pokemons);
 })
 
-app.post('/pokemons', async (req, res) => {
-    const {name, type } = req.body;
-    const newPokemon = await prisma.pokemon.create({
-        data: { name,type }
-    });
-    res.status(201).json(newPokemon);
-});
+
 
 app.get('/', (req, res) => {
     res.send('Pikachu Prismatico');
@@ -26,3 +20,13 @@ app.listen(3333, () => {
     console.log('servidor rodando na http://localhost:3333');
 });
 
+app.post('/pokemons', async (req, res) => {
+  const { name, type } = req.body;
+  if (!name || !type) {
+    return res.status(400).json({ error: "Nome e tipo são obrigatórios!" });
+  }
+  const newPokemon = await prisma.pokemon.create({
+    data: { name, type }
+  });
+  res.status(201).json(newPokemon);
+});
